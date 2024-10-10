@@ -18,7 +18,7 @@ const users = {
   },
 };
 
-const memes = [
+export const memes = [
   {
     id: "dummy_meme_id_1",
     authorId: "dummy_user_id_1",

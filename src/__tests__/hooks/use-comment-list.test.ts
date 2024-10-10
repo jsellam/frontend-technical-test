@@ -4,7 +4,7 @@ import { renderQueryHook } from "../utils";
 import { waitFor } from "@testing-library/react";
 
 describe("useCommentList", () => {
-  it("should call useInfiniteQuery with the correct parameters", async () => {
+  it("should call useInfiniteQuery with the correct parameters and result", async () => {
     const memeId = "dummy_meme_id_1";
     const { result } = renderQueryHook(() => useCommentList(memeId));
 
