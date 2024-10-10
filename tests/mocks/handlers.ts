@@ -97,6 +97,13 @@ export const handlers = [
     }
   ),
 
+  http.post<{}, CreateMemeParam>(
+    "https://fetestapi.int.mozzaik365.net/api/memes/:memeId/comments",
+    async ({ request }) => {
+      return HttpResponse.json(comments[0]);
+    }
+  ),
+
   http.get<{ id: string }>(
     "https://fetestapi.int.mozzaik365.net/api/users/:id",
     async ({ params }) => {
