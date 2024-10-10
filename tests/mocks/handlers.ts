@@ -1,4 +1,5 @@
 import { http, HttpResponse } from "msw";
+import { CreateMemeParam } from "../../src/services/api";
 
 const users = {
   dummy_user_id_1: {
@@ -77,6 +78,25 @@ export const handlers = [
       });
     }
   ),
+
+  http.post<{}, CreateMemeParam>(
+    "https://fetestapi.int.mozzaik365.net/api/memes",
+    async ({ request }) => {
+      //TODO : Return http errors from form data
+      /*
+      // Picture=<binary data>
+      // Description=Your description
+      // Texts[0][Content]=Caption 1
+      // Texts[0][X]=100
+      // Texts[0][Y]=50
+      // Texts[1][Content]=Caption 2
+      // Texts[1][X]=42
+      // Texts[1][Y]=84
+      */
+      return HttpResponse.json(memes[0]);
+    }
+  ),
+
   http.get<{ id: string }>(
     "https://fetestapi.int.mozzaik365.net/api/users/:id",
     async ({ params }) => {
@@ -99,7 +119,6 @@ export const handlers = [
   http.get<{ id: string }>(
     "https://fetestapi.int.mozzaik365.net/api/memes/:id/comments",
     async ({ params }) => {
-      console.log("---- mocked meme comments");
       const memeComments = comments.filter(
         (comment) => comment.memeId === params.id
       );
