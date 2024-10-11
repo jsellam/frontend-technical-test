@@ -9,9 +9,13 @@ import {
   createRoute,
   createRouter,
 } from "@tanstack/react-router";
-import { render } from "@testing-library/react";
+import { render, renderHook } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-function createTestRouter(component: (...args: any) => React.ReactNode, currentUrl: string) {
+function createTestRouter(
+  component: (...args: any) => React.ReactNode,
+  currentUrl: string
+) {
   const rootRoute = createRootRoute({
     component: Outlet,
   });
@@ -33,23 +37,32 @@ function createTestRouter(component: (...args: any) => React.ReactNode, currentU
 type RenderWithRouterParams = {
   component: (...args: any) => React.ReactNode;
   Wrapper?: React.ComponentType<PropsWithChildren>;
-  onNavigate?: ListenerFn<RouterEvents['onBeforeNavigate']>;
+  onNavigate?: ListenerFn<RouterEvents["onBeforeNavigate"]>;
   currentUrl?: string;
 };
+
+export function renderQueryHook<Result, Props>(hook: (props: Props) => Result) {
+  const queryClient = new QueryClient();
+  const Wrapper: React.FC<PropsWithChildren> = ({ children }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+
+  return renderHook(hook, { wrapper: Wrapper });
+}
 
 export function renderWithRouter({
   component,
   Wrapper = React.Fragment,
   onNavigate = () => {},
-  currentUrl = "/"
+  currentUrl = "/",
 }: RenderWithRouterParams) {
   const router = createTestRouter(component, currentUrl);
-  router.subscribe('onBeforeNavigate', onNavigate);
+  router.subscribe("onBeforeNavigate", onNavigate);
   const renderResult = render(
     <Wrapper>
       {/* @ts-expect-error */}
       <RouterProvider router={router} />;
-    </Wrapper>,
+    </Wrapper>
   );
 
   return {

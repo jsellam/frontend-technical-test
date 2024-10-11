@@ -23,9 +23,9 @@ function incrementeCommentCount(data: InfiniteData, memeId: string) {
 export function useSubmitComment(memeId: string) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (data: { content: string }) => {
-      await createMemeComment(memeId, data.content);
-    },
+    mutationFn: async (data: { content: string }) =>
+      await createMemeComment(memeId, data.content),
+
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["comments", memeId] });
       queryClient.setQueryData<InfiniteData>(["memes"], (data) => {

@@ -30,5 +30,7 @@ export async function createMemeComment(memeId: string, content: string) {
   const result = await axiosClient.post(`/memes/${memeId}/comments`, {
     content,
   });
-  return memeCommentSchema.parse(result.data);
+
+  const parse = memeCommentSchema.parse(result.data);
+  return parse;
 }

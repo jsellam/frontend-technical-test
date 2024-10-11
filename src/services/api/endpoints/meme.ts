@@ -58,5 +58,6 @@ export async function createMeme(data: CreateMemeParam) {
       "Content-Type": "multipart/form-data",
     },
   });
+  console.log("post result", result.data);
   return memeSchema.parse(result.data);
 }

@@ -1,4 +1,5 @@
 import { http, HttpResponse } from "msw";
+import { CreateMemeParam } from "../../src/services/api";
 
 const users = {
   dummy_user_id_1: {
@@ -18,7 +19,7 @@ const users = {
   },
 };
 
-const memes = [
+export const memes = [
   {
     id: "dummy_meme_id_1",
     authorId: "dummy_user_id_1",
@@ -31,9 +32,9 @@ const memes = [
     ],
     createdAt: "2021-09-01T12:00:00Z",
   },
-]
+];
 
-const comments = [
+export const comments = [
   {
     id: "dummy_comment_id_1",
     memeId: "dummy_meme_id_1",
@@ -55,7 +56,7 @@ const comments = [
     content: "dummy comment 3",
     createdAt: "2021-09-01T12:00:00Z",
   },
-]
+];
 
 export const handlers = [
   http.post<{}, { username: string; password: string }>(
@@ -75,8 +76,34 @@ export const handlers = [
       return new HttpResponse(null, {
         status: 401,
       });
-    },
+    }
   ),
+
+  http.post<{}, CreateMemeParam>(
+    "https://fetestapi.int.mozzaik365.net/api/memes",
+    async ({ request }) => {
+      //TODO : Return http errors from form data
+      /*
+      // Picture=<binary data>
+      // Description=Your description
+      // Texts[0][Content]=Caption 1
+      // Texts[0][X]=100
+      // Texts[0][Y]=50
+      // Texts[1][Content]=Caption 2
+      // Texts[1][X]=42
+      // Texts[1][Y]=84
+      */
+      return HttpResponse.json(memes[0]);
+    }
+  ),
+
+  http.post<{}, CreateMemeParam>(
+    "https://fetestapi.int.mozzaik365.net/api/memes/:memeId/comments",
+    async ({ request }) => {
+      return HttpResponse.json(comments[0]);
+    }
+  ),
+
   http.get<{ id: string }>(
     "https://fetestapi.int.mozzaik365.net/api/users/:id",
     async ({ params }) => {
@@ -87,7 +114,7 @@ export const handlers = [
       return new HttpResponse(null, {
         status: 404,
       });
-    },
+    }
   ),
   http.get("https://fetestapi.int.mozzaik365.net/api/memes", async () => {
     return HttpResponse.json({
@@ -100,13 +127,13 @@ export const handlers = [
     "https://fetestapi.int.mozzaik365.net/api/memes/:id/comments",
     async ({ params }) => {
       const memeComments = comments.filter(
-        (comment) => comment.memeId === params.id,
+        (comment) => comment.memeId === params.id
       );
       return HttpResponse.json({
         total: memeComments.length,
         pageSize: memeComments.length,
         results: memeComments,
       });
-    },
+    }
   ),
 ];
